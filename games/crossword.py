@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import argparse
 
 # Константи для візуалізації
 CELL_SIZE = 40
@@ -26,8 +27,10 @@ class CrosswordSolverBase:
     def draw_cell(self, row, col, value):
         # draw a cell
         color = WHITE if value == '-' else GRAY
-        pygame.draw.rect(self.screen, color, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        pygame.draw.rect(self.screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
+        pygame.draw.rect(self.screen, color, (col * CELL_SIZE, row * CELL_SIZE,\
+         CELL_SIZE, CELL_SIZE))
+        pygame.draw.rect(self.screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE,\
+         CELL_SIZE, CELL_SIZE), 1)
 
         if value != '-':
             text = self.font.render(value, True, BLACK)
@@ -43,27 +46,27 @@ class CrosswordSolverBase:
         if direction == 'H':
             if col + len(word) > self.cols:
                 return False
-            for i in range(len(word)):
-                if self.grid[row][col + i] not in ('-', word[i]):
+            for i, char in enumerate(word):
+                if self.grid[row][col + i] not in ('-', char):
                     return False
         elif direction == 'V':
             if row + len(word) > self.rows:
                 return False
-            for i in range(len(word)):
-                if self.grid[row + i][col] not in ('-', word[i]):
+            for i, char in enumerate(word):
+                if self.grid[row + i][col] not in ('-', char):
                     return False
         return True
 
     def place_word(self, word, row, col, direction):
         previous_state = []
         if direction == 'H':
-            for i in range(len(word)):
+            for i, char in enumerate(word):
                 previous_state.append(self.grid[row][col + i])
-                self.grid[row][col + i] = word[i]
+                self.grid[row][col + i] = char
         elif direction == 'V':
-            for i in range(len(word)):
+            for i, char in enumerate(word):
                 previous_state.append(self.grid[row + i][col])
-                self.grid[row + i][col] = word[i]
+                self.grid[row + i][col] = char
         return previous_state
 
     def remove_word(self, word, row, col, direction, previous_state):
@@ -146,11 +149,22 @@ grid = [
     ['#', '#', '#', '-']
 ]
 
-if __name__ == "__main__":
+def run_console_version():
+    pass
+
+def run_pygame_version():
     with open("words_2.txt", "r", encoding='utf-8') as f:
         all_words = [line.strip().upper() for line in f if line.strip()]
 
     N = int(input('введіть кількість слів: '))
     selected_words = random.sample([word for word in all_words if 3 <= len(word) <= 8], k=N)
-
     benchmark_solver(BacktrackingSolver, grid, selected_words, "Backtracking")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Crossword Solver')
+    parser.add_argument('mode', choices=['console', 'visual'], help='Display mode')
+    args = parser.parse_args()
+    if args.mode == 'console':
+        run_console_version()
+    else:
+        run_pygame_version()

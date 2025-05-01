@@ -3,6 +3,8 @@ A module for solving the N-Queens problem using backtracking algorithm with cons
 interface.
 """
 import time
+import argparse
+import pygame
 
 class NQueensSolver:
     """
@@ -147,12 +149,20 @@ class ConsoleNQueens:
                 print("\nProgram terminated by user.")
                 break
 
-def main():
-    """
-    Main function to start the program.
-    """
+
+def run_console_version():
     console_app = ConsoleNQueens()
     console_app.run()
 
+def run_pygame_version():
+    pass
+
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='N-Queens Solver')
+    parser.add_argument('mode', choices=['console', 'visual'], help='Display mode')
+    args = parser.parse_args()
+
+    if args.mode == 'console':
+        run_console_version()
+    else:
+        run_pygame_version()

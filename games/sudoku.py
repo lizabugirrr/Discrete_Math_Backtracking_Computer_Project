@@ -86,8 +86,8 @@ def visual_solve_console(board, delay=0.05):
             time.sleep(delay / 2)
     return False
 
-def run_console_version():
-    board = generate_sudoku(clues=30)
+def run_console_version(clues):
+    board = generate_sudoku(clues=clues)
     print("Initial Board:\n")
     print_board(board)
     input("Press Enter to start solving...\n")
@@ -146,8 +146,8 @@ def visual_solve_pygame(board):
             pygame.time.delay(50)
     return False
 
-def run_pygame_version():
-    board = generate_sudoku(clues=30)
+def run_pygame_version(clues):
+    board = generate_sudoku(clues=clues)
     running = True
     solving = False
     while running:
@@ -163,10 +163,41 @@ def run_pygame_version():
             solving = False
     pygame.quit()
 
+def choose_difficulty():
+    print("Select Difficulty:")
+    print("1 - Easy")
+    print("2 - Medium")
+    print("3 - Hard")
+    while True:
+        choice = input("Enter 1, 2, or 3: ").strip()
+        if choice == "1":
+            return 40
+        elif choice == "2":
+            return 30
+        elif choice == "3":
+            return 20
+        else:
+            print("Invalid choice. Try again.")
+
+# if __name__ == "__main__":
+#     mode = input("Choose mode: (c)onsole or (v)isual: ").strip().lower()
+#     clues = choose_difficulty()
+#     if mode == 'c':
+#         run_console_version(clues)
+#     else:
+#         run_pygame_version(clues)
 
 if __name__ == "__main__":
-    mode = input("Choose mode: (c)onsole or (v)isual: ").strip().lower()
-    if mode == 'c':
-        run_console_version()
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Sudoku Solver')
+    parser.add_argument('mode', choices=['console', 'visual'], help='Display mode')
+    parser.add_argument('difficulty', type=int, nargs='?', default=30, 
+                       help='Number of clues (difficulty)')
+
+    args = parser.parse_args()
+
+    if args.mode == 'console':
+        run_console_version(args.difficulty)
     else:
-        run_pygame_version()
+        run_pygame_version(args.difficulty)
