@@ -1,5 +1,6 @@
 import random
 import time
+import math
 import pygame
 from colorama import init, Fore, Back, Style
 
@@ -7,24 +8,28 @@ init(autoreset = True)
 
 # Sudoku Tools
 def is_valid(board, row, col, num):
-    for i in range(9):
+    size = len(board)
+    subgrid_size = int(math.sqrt(size))
+
+    for i in range(size):
         if num in (board[row][i], board[i][col]):
             return False
 
-    row_block_start, col_block_start = 3* (row // 3), 3* (col // 3)
-    row_block_end, col_block_end  = row_block_start + 3, col_block_start + 3
+    row_start = (row // subgrid_size) * subgrid_size
+    col_start = (col // subgrid_size) * subgrid_size
 
-    for i in range(row_block_start, row_block_end):
-        for j in range(col_block_start, col_block_end):
+    for i in range(row_start, row_start + subgrid_size):
+        for j in range(col_start, col_start + subgrid_size):
             if board[i][j] == num:
                 return False
     return True
 
 def find_empty_cell(board):
-    for row in range(9):
-        for col in range(9):
-            if board[row][col] == 0 :
-                return row,col
+    size = len(board)
+    for row in range(size):
+        for col in range(size):
+            if board[row][col] == 0:
+                return row, col
     return None
 
 def generate_sudoku(clues=25):
@@ -42,7 +47,8 @@ def solve_backtracking(board):
     if not empty:
         return True
     row, col = empty
-    for num in range(1, 10):
+    size = len(board)
+    for num in range(1, size + 1):
         if is_valid(board, row, col, num):
             board[row][col] = num
             if solve_backtracking(board):
@@ -50,8 +56,8 @@ def solve_backtracking(board):
             board[row][col] = 0
     return False
 
-#Console Display
 
+#Console Display
 def print_board(board, highlight=None):
     for i in range(9):
         row_str = ""
@@ -87,10 +93,19 @@ def visual_solve_console(board, delay=0.05):
     return False
 
 def run_console_version(clues):
+    clues = choose_difficulty()
     board = generate_sudoku(clues=clues)
-    print("Initial Board:\n")
+    print("\nInitial Board (Difficulty: {} clues):\n".format(clues))
     print_board(board)
-    input("Press Enter to start solving...\n")
+
+    while True:
+        proceed = input("Press Enter to solve or type 'q' to quit: ").strip().lower()
+        if proceed == "":
+            break
+        elif proceed == "q":
+            print("Exiting...")
+            return
+
     if visual_solve_console(board):
         print("Solved Board:\n")
         print_board(board)
@@ -179,13 +194,6 @@ def choose_difficulty():
         else:
             print("Invalid choice. Try again.")
 
-# if __name__ == "__main__":
-#     mode = input("Choose mode: (c)onsole or (v)isual: ").strip().lower()
-#     clues = choose_difficulty()
-#     if mode == 'c':
-#         run_console_version(clues)
-#     else:
-#         run_pygame_version(clues)
 
 if __name__ == "__main__":
     import argparse
@@ -198,6 +206,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.mode == 'console':
-        run_console_version(args.difficulty)
+        run_console_version(None)
     else:
         run_pygame_version(args.difficulty)
