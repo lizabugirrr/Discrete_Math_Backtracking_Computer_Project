@@ -301,16 +301,25 @@ def benchmark_solver(solver_class, grid, words, name, valid_words, use_console=F
                     running = False
         pygame.quit()
 
+# grid = [
+#     ['-', '#', '#', '#'],
+#     ['-', '#', '#', '#'],
+#     ['-', '-', '-', '-'],
+#     ['#', '#', '#', '-'],
+#     ['#', '#', '#', '-'],
+#     ['#', '#', '#', '-'],
+#     ['#', '#', '#', '-']
+# ]
 grid = [
-    ['-', '#', '#', '#'],
-    ['-', '#', '#', '#'],
-    ['-', '-', '-', '-'],
-    ['#', '#', '#', '-'],
-    ['#', '#', '#', '-'],
-    ['#', '#', '#', '-'],
-    ['#', '#', '#', '-']
+    ['-','-','-', '#', '-', '-', '-'],
+    ['#', '#', '#', '#', '#','#', '#'],
+    ['#','#', '-', '-', '-', '#', '#'],
+    ['#', '#', '#', '#','#', '#', '#'],
+    ['-','-','-','-','-','-','-', '-'],
+    ['#', '#', '#', '-','#', '#', '#'],
+    ['#', '#', '#', '-', '#', '#', '#'],
+    ['#', '#', '#', '-', '#', '#', '#']
 ]
-
 def load_words_from_file(filename):
     if not os.path.exists(filename):
         print(f"Файл {filename} не знайдено.")
@@ -329,7 +338,7 @@ def run_console_version():
         all_words = ["cat", "dog", "rat", "bat", "hat", "mat", "sat", "fat", "pat", "mat"]
     
     valid_words_set = set(all_words)
-    N = 4
+    N = 5
     # try:
     #     N = int(input('Введіть кількість слів для кросворду: '))
     selected_words = random.sample([word for word in all_words if 3 <= len(word) <= 8], k=min(N, len(all_words)))
@@ -347,7 +356,7 @@ def run_pygame_version():
         all_words = load_words_from_file(words_file)
         
         valid_words_set = set(all_words)
-        N = 4
+        N = 5
         # N = int(input('Введіть кількість слів для кросворду: '))
         selected_words = random.sample([word for word in all_words if 3 <= len(word) <= 8], k=min(N, len(all_words)))
         selected_words = [word.upper() for word in selected_words]
