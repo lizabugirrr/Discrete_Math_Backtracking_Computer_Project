@@ -140,7 +140,7 @@ def solve_maze_console(maze, r, c, end_r, end_c, path_length=0):
             if original != 'B':
                 maze[nr][nc] = '*'
                 maze_display[nr][nc] = '*'
-                
+      
                 clear_screen()
                 print("Solving maze...")
                 print_maze(maze_display)
@@ -152,7 +152,7 @@ def solve_maze_console(maze, r, c, end_r, end_c, path_length=0):
             if original != 'B':
                 maze[nr][nc] = '.'
                 maze_display[nr][nc] = '.'
-                
+
                 clear_screen()
                 print("Backtracking...")
                 print_maze(maze_display)
@@ -162,9 +162,9 @@ def solve_maze_console(maze, r, c, end_r, end_c, path_length=0):
 
 def run_console_version():
     global maze_display
-    
+
     maze_display = [row[:] for row in maze]
-    
+
     rows, cols = len(maze), len(maze[0])
     start = None
     end = None
@@ -186,7 +186,7 @@ def run_console_version():
     clear_screen()
     print("Solving maze...")
     print_maze(maze_display)
-    
+
     found_path = solve_maze_console(maze, start[0], start[1], end[0], end[1])
 
     print()

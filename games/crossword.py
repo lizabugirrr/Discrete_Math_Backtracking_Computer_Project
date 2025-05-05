@@ -27,7 +27,7 @@ class CrosswordSolverBase:
         self.valid_words = valid_words  # dict for valid words
         self.word_positions = []  # list to store placed words to check intersections
         self.use_console_visualization = use_console_visualization
-        
+
         if screen is not None:
             import pygame
             self.font = pygame.font.Font(None, 30)
@@ -35,7 +35,7 @@ class CrosswordSolverBase:
     def draw_cell(self, row, col, value, highlight=False):
         if self.screen is None:
             return
-            
+
         # draw a cell
         import pygame
         color = YELLOW if highlight else (WHITE if value == '-' else GRAY)
@@ -75,19 +75,19 @@ class CrosswordSolverBase:
                         else:
                             row_str += f' {cell_value} '
                 print(row_str)
-            
+
             if self.word_positions:
                 print("\nРозміщені слова:")
             print("=" * 40)
             time.sleep(FORWARD_DELAY)
             return
-        
+
         if self.screen is None:
             for row in self.grid:
                 print(' '.join(row))
             print()
             return
-            
+ 
         import pygame
         for r in range(self.rows):
             for c in range(self.cols):
@@ -113,7 +113,7 @@ class CrosswordSolverBase:
                     return False
         if not self.check_intersections(word, row, col, direction):
             return False
-            
+ 
         return True
 
     def check_intersections(self, new_word, row, col, direction):
@@ -159,13 +159,13 @@ class CrosswordSolverBase:
                             if current_word.lower() not in self.valid_words:
                                 return False
                     current_word = ""
-        
+
         return True
 
     def place_word(self, word, row, col, direction):
         previous_state = []
         positions = []
-        
+
         if direction == 'H':
             for i, char in enumerate(word):
                 previous_state.append(self.grid[row][col + i])
@@ -176,7 +176,7 @@ class CrosswordSolverBase:
                 previous_state.append(self.grid[row + i][col])
                 self.grid[row + i][col] = char
                 positions.append((row + i, col))
-        
+
         self.word_positions.append({
             'word': word,
             'row': row,
@@ -184,7 +184,7 @@ class CrosswordSolverBase:
             'direction': direction,
             'positions': positions
         })
-        
+
         return previous_state
 
     def remove_word(self, word, row, col, direction, previous_state):
@@ -194,7 +194,7 @@ class CrosswordSolverBase:
         elif direction == 'V':
             for i in range(len(word)):
                 self.grid[row + i][col] = previous_state[i]
-        
+
         for i, word_info in enumerate(self.word_positions):
             if (word_info['word'] == word and 
                 word_info['row'] == row and 
@@ -213,25 +213,30 @@ class CrosswordSolverBase:
                     for pos2 in word2['positions']:
                         if pos1 == pos2:
                             intersections.append(pos1)
-        
+
         return intersections
 
 class BacktrackingSolver(CrosswordSolverBase):
     def solve(self, index=0):
         if index == len(self.words):
             return True
-        
+
         word = self.words[index]
-        
+
         for row in range(self.rows):
             for col in range(self.cols):
                 if self.is_valid_placement(word, row, col, 'H'):
                     previous_state = self.place_word(word, row, col, 'H')
                     intersections = self.highlight_intersections()
-                    self.print_board(intersections)
-                    
+                    self.print_board(intersections)     
                     if self.screen is not None and not self.use_console_visualization:
                         import pygame
+                        # pygame.display.update()
+                        # time.sleep(FORWARD_DELAY)
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                                sys.exit()
                         pygame.display.update()
                         time.sleep(FORWARD_DELAY)
 
@@ -246,9 +251,15 @@ class BacktrackingSolver(CrosswordSolverBase):
                     previous_state = self.place_word(word, row, col, 'V')
                     intersections = self.highlight_intersections()
                     self.print_board(intersections)
-                    
+
                     if self.screen is not None and not self.use_console_visualization:
                         import pygame
+                        # pygame.display.update()
+                        # time.sleep(FORWARD_DELAY)
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                                sys.exit()
                         pygame.display.update()
                         time.sleep(FORWARD_DELAY)
 
@@ -269,15 +280,15 @@ def benchmark_solver(solver_class, grid, words, name, valid_words, use_console=F
             pygame.init()
             screen = pygame.display.set_mode((len(grid[0]) * CELL_SIZE, len(grid) * CELL_SIZE))
             pygame.display.set_caption(f"{name} Solver")
-        except:
+        except Exception:
             print("Pygame не може бути ініціалізовано. Використовуємо консольний режим.")
             use_console = True
-    
+
     solver = solver_class(grid, words, screen, valid_words, use_console_visualization=use_console)
-    
+
     if use_console:
         print("\nПочатковий стан кросворду:")
-    
+
     solver.print_board()
 
     start_time = time.perf_counter()
@@ -291,7 +302,7 @@ def benchmark_solver(solver_class, grid, words, name, valid_words, use_console=F
     else:
         print(f"\n{name} Solver: Рішення не існує.")
     print(f"Час виконання: {elapsed_time:.6f} секунд\n")
-    
+
     if screen is not None:
         import pygame
         running = True
@@ -324,7 +335,7 @@ def load_words_from_file(filename):
     if not os.path.exists(filename):
         print(f"Файл {filename} не знайдено.")
         return []
-        
+
     with open(filename, "r", encoding='utf-8') as f:
         words = [line.strip().lower() for line in f if line.strip()]
     return words
@@ -332,11 +343,11 @@ def load_words_from_file(filename):
 def run_console_version():
     words_file = 'words_2.txt'
     all_words = load_words_from_file(words_file)
-    
+
     if not all_words:
         print("Не вдалося завантажити слова. Використовуємо тестовий набір.")
         all_words = ["cat", "dog", "rat", "bat", "hat", "mat", "sat", "fat", "pat", "mat"]
-    
+
     valid_words_set = set(all_words)
     N = 5
     # try:
@@ -345,16 +356,17 @@ def run_console_version():
     # except:
     #     print("Помилка при виборі слів. Використовуємо 5 слів.")
     #     selected_words = random.sample([word for word in all_words if 3 <= len(word) <= 8], k=min(5, len(all_words)))
-    
+
     selected_words = [word.upper() for word in selected_words]
     print(f"Вибрані слова: {selected_words}")
     benchmark_solver(BacktrackingSolver, grid, selected_words, "Backtracking", valid_words_set, use_console=True)
 
 def run_pygame_version():
     try:
-        words_file = 'words_2.txt'
+        # words_file = 'words_2.txt'
+        words_file = os.path.join(os.path.dirname(__file__), 'words_2.txt')
         all_words = load_words_from_file(words_file)
-        
+
         valid_words_set = set(all_words)
         N = 5
         # N = int(input('Введіть кількість слів для кросворду: '))
