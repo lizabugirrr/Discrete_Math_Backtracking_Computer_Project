@@ -140,7 +140,7 @@ def solve_maze_console(maze, r, c, end_r, end_c, path_length=0):
             if original != 'B':
                 maze[nr][nc] = '*'
                 maze_display[nr][nc] = '*'
-      
+
                 clear_screen()
                 print("Solving maze...")
                 print_maze(maze_display)

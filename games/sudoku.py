@@ -9,17 +9,14 @@ init(autoreset = True)
 # Sudoku Tools
 def is_valid(board, row, col, num):
     size = len(board)
-    subgrid_size = int(math.sqrt(size))
-
+    base = int(size**0.5)
     for i in range(size):
         if num in (board[row][i], board[i][col]):
             return False
-
-    row_start = (row // subgrid_size) * subgrid_size
-    col_start = (col // subgrid_size) * subgrid_size
-
-    for i in range(row_start, row_start + subgrid_size):
-        for j in range(col_start, col_start + subgrid_size):
+    start_row = base * (row // base)
+    start_col = base * (col // base)
+    for i in range(start_row, start_row + base):
+        for j in range(start_col, start_col + base):
             if board[i][j] == num:
                 return False
     return True
@@ -80,7 +77,8 @@ def visual_solve_console(board, delay=0.05):
     if not empty:
         return True
     row, col = empty
-    for num in range(1, 10):
+    size = len(board)
+    for num in range(1, size + 1):
         if is_valid(board, row, col, num):
             board[row][col] = num
             print_board(board, highlight=(row, col))
@@ -146,7 +144,8 @@ def visual_solve_pygame(board):
     if not empty:
         return True
     row, col = empty
-    for num in range(1, 10):
+    size = len(board)
+    for num in range(1, size + 1):
         if is_valid(board, row, col, num):
             board[row][col] = num
             draw_board(board, highlight=(row, col))
