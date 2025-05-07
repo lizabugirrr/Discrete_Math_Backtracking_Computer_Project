@@ -1,0 +1,14 @@
+# Python packages required for the project
+# Standard library imports (time, random, copy, argparse, etc.) are not listed here.
+
+# Third-party packages
+pygame>=2.0.0        # For game development and multimedia
+colorama>=0.4.0      # For colored terminal output
+matplotlib>=3.0.0    # For plotting and visualization
+networkx>=2.0.0      # For graph and network analysis
+
+# Optional:
+# pygame==2.5.2
+# colorama==0.4.6
+# matplotlib==3.8.2
+# networkx==3.2.1

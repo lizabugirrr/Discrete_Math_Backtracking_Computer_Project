@@ -1,9 +1,10 @@
 import time
 import random
 import copy
+from collections import defaultdict
 import matplotlib.pyplot as plt
 from sudoku import is_valid
-from collections import defaultdict
+
 
 
 # Sudoku Generator
