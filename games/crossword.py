@@ -135,6 +135,9 @@ class CrosswordSolverBase:
                     current_word += temp_grid[r][c]
                 else:
                     if len(current_word) > 1:
+                        # is_part_of_new_word = (direction == 'H' and r == row and 
+                        #                       start_col <= col + len(new_word) - 1 and 
+                        #                       col <= start_col + len(current_word) - 1)
                         is_part_of_new_word = (direction == 'H' and r == row and 
                                               start_col <= col + len(new_word) - 1 and 
                                               col <= start_col + len(current_word) - 1)
@@ -152,6 +155,9 @@ class CrosswordSolverBase:
                     current_word += temp_grid[r][c]
                 else:
                     if len(current_word) > 1:
+                        # is_part_of_new_word = (direction == 'V' and c == col and 
+                        #                       start_row <= row + len(new_word) - 1 and 
+                        #                       row <= start_row + len(current_word) - 1)
                         is_part_of_new_word = (direction == 'V' and c == col and 
                                               start_row <= row + len(new_word) - 1 and 
                                               row <= start_row + len(current_word) - 1)
@@ -219,8 +225,12 @@ class CrosswordSolverBase:
 class BacktrackingSolver(CrosswordSolverBase):
     def solve(self, index=0):
         if index == len(self.words):
+        #     if any('-' in sublist for sublist in self.grid):
+        #         return False
+        #     else:
             return True
-
+        # if any('-' in sublist for sublist in self.grid):
+        #     print (self.grid)
         word = self.words[index]
 
         for row in range(self.rows):
@@ -296,11 +306,12 @@ def benchmark_solver(solver_class, grid, words, name, valid_words, use_console=F
     end_time = time.perf_counter()
     elapsed_time = end_time - start_time
 
-    if success:
+    if success and not any('-' in sublist for sublist in solver.grid):
         print(f"\n{name} Solver: Рішення знайдено:")
         solver.print_board(solver.highlight_intersections())
     else:
         print(f"\n{name} Solver: Рішення не існує.")
+        print (words)
     print(f"Час виконання: {elapsed_time:.6f} секунд\n")
 
     if screen is not None:
@@ -326,11 +337,18 @@ grid = [
     ['#', '#', '#', '#', '#','#', '#'],
     ['#','#', '-', '-', '-', '#', '#'],
     ['#', '#', '#', '#','#', '#', '#'],
-    ['-','-','-','-','-','-','-', '-'],
+    ['-','-','-','-','-','-','-'],
     ['#', '#', '#', '-','#', '#', '#'],
     ['#', '#', '#', '-', '#', '#', '#'],
     ['#', '#', '#', '-', '#', '#', '#']
 ]
+# grid = [
+#     ['-','-','-', '#', '-', '-', '-'],
+#     ['#', '#', '#', '#', '#','#', '#'],
+#     ['#','#', '-', '-', '-', '#', '#'],
+#     ['#', '#', '#', '#','#', '#', '#'],
+#     ['-','-','-','-','-','-','-']
+# ]
 def load_words_from_file(filename):
     if not os.path.exists(filename):
         print(f"Файл {filename} не знайдено.")
@@ -346,13 +364,14 @@ def run_console_version():
 
     if not all_words:
         print("Не вдалося завантажити слова. Використовуємо тестовий набір.")
-        all_words = ["cat", "dog", "rat", "bat", "hat", "mat", "sat", "fat", "pat", "mat"]
-
+        all_words = ["cat", "dog", "rat", "bat", "hat", "morning", "teacher", "picture", "lamp", "mat"]
+    
     valid_words_set = set(all_words)
     N = 5
     # try:
     #     N = int(input('Введіть кількість слів для кросворду: '))
     selected_words = random.sample([word for word in all_words if 3 <= len(word) <= 8], k=min(N, len(all_words)))
+    
     # except:
     #     print("Помилка при виборі слів. Використовуємо 5 слів.")
     #     selected_words = random.sample([word for word in all_words if 3 <= len(word) <= 8], k=min(5, len(all_words)))
@@ -372,12 +391,13 @@ def run_pygame_version():
         # N = int(input('Введіть кількість слів для кросворду: '))
         selected_words = random.sample([word for word in all_words if 3 <= len(word) <= 8], k=min(N, len(all_words)))
         selected_words = [word.upper() for word in selected_words]
-        print(f"Вибрані слова: {selected_words}")
         benchmark_solver(BacktrackingSolver, grid, selected_words, "Backtracking", valid_words_set, use_console=False)
     except Exception as e:
         print(f"Помилка: {e}")
         print("Використовуємо консольний режим.")
         run_console_version()
+
+#run_console_version()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Crossword Solver')
