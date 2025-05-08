@@ -87,7 +87,7 @@ class CrosswordSolverBase:
                 print(' '.join(row))
             print()
             return
- 
+
         import pygame
         for r in range(self.rows):
             for c in range(self.cols):
@@ -113,7 +113,7 @@ class CrosswordSolverBase:
                     return False
         if not self.check_intersections(word, row, col, direction):
             return False
- 
+
         return True
 
     def check_intersections(self, new_word, row, col, direction):
@@ -365,7 +365,7 @@ def run_console_version():
     if not all_words:
         print("Не вдалося завантажити слова. Використовуємо тестовий набір.")
         all_words = ["cat", "dog", "rat", "bat", "hat", "morning", "teacher", "picture", "lamp", "mat"]
-    
+
     valid_words_set = set(all_words)
     N = 5
     # try:

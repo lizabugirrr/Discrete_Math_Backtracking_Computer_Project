@@ -9,8 +9,16 @@ from sudoku import is_valid
 
 # Sudoku Generator
 def generate_sudoku(N, clues):
+    """
+    Generate a Sudoku board of size NxN with a given number of clues.
+    Returns:
+        list: A 2D list representing the generated Sudoku board.
+    """
     base = int(N**0.5)
     def pattern(r, c):
+        """
+        Determine the value at position (r, c) based on the Sudoku pattern.
+        """
         return (base * (r % base) + r // base + c) % N
 
     def shuffle(s):
@@ -32,6 +40,13 @@ def generate_sudoku(N, clues):
 
 # DFS Solver
 def dfs_solver(board):
+    """
+    Solve the Sudoku puzzle using Depth First Search (DFS) algorithm.
+    Args:
+        board (list): The Sudoku puzzle to be solved.
+    Returns:
+        list: A solved Sudoku board, or None if no solution exists.
+    """
     size = len(board)
     stack = [(0, 0, copy.deepcopy(board))]
     while stack:
@@ -54,6 +69,13 @@ def dfs_solver(board):
 
 # Backtracking Solver
 def backtracking_solver(board):
+    """
+    Solve the Sudoku puzzle using the Backtracking algorithm.
+    Args:
+        board (list): The Sudoku puzzle to be solved.
+    Returns:
+        list: A solved Sudoku board, or None if no solution exists.
+    """
     size = len(board)
     for row in range(size):
         for col in range(size):
@@ -70,6 +92,15 @@ def backtracking_solver(board):
 
 # Greedy Solver
 def greedy_solver(board):
+    """
+    Solve the Sudoku puzzle using the Greedy algorithm.
+    
+    Args:
+        board (list): The Sudoku puzzle to be solved.
+    
+    Returns:
+        list: A solved Sudoku board, or None if no solution exists.
+    """
     size = len(board)
     empty = [(r, c) for r in range(size) for c in range(size) if board[r][c] == 0]
     random.shuffle(empty)
@@ -85,6 +116,15 @@ def greedy_solver(board):
 
 # Benchmarking Function
 def benchmark_solvers(sizes, trials):
+    """
+    Benchmark the three Sudoku solving algorithms (DFS, Backtracking, Greedy) 
+    on different board sizes and clue counts.
+    Args:
+        sizes (list): A list of grid sizes
+        trials (int): The number of trials to run for each size and clue count.
+    Returns:
+        dict: A dictionary containing the results of the benchmark for each algorithm.
+    """
     results = {
         'dfs': defaultdict(lambda: defaultdict(list)),
         'backtracking': defaultdict(lambda: defaultdict(list)),
@@ -140,6 +180,9 @@ def benchmark_solvers(sizes, trials):
 
 
 def show_all_plots(results):
+    """
+    Generate and display plots based on benchmarking results.
+    """
     sizes = sorted(results['backtracking'].keys())
     plt.figure(figsize=(15, 12))
 

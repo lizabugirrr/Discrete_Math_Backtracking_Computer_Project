@@ -1,3 +1,9 @@
+"""
+Sudoku Solver Visualizer
+
+This script generates Sudoku puzzles, solves them using backtracking, and provides
+both console-based and Pygame-based visualizations of the solving process.
+"""
 import random
 import time
 import math
@@ -8,6 +14,9 @@ init(autoreset = True)
 
 # Sudoku Tools
 def is_valid(board, row, col, num):
+    """
+    Check if placing `num` at board[row][col] is valid according to Sudoku rules.
+    """
     size = len(board)
     base = int(size**0.5)
     for i in range(size):
@@ -22,6 +31,10 @@ def is_valid(board, row, col, num):
     return True
 
 def find_empty_cell(board):
+    """
+    Find the next empty cell (value 0) in the Sudoku board.
+    Returns a tuple (row, col) or None if no empty cells remain.
+    """
     size = len(board)
     for row in range(size):
         for col in range(size):
@@ -30,6 +43,10 @@ def find_empty_cell(board):
     return None
 
 def generate_sudoku(clues=25):
+    """
+    Generate a Sudoku puzzle with a given number of clues.
+    The more clues, the easier the puzzle.
+    """
     board = [[0] * 9 for _ in range(9)]
     solve_backtracking(board)
     cells = [(i, j) for i in range(9) for j in range(9)]
@@ -40,6 +57,10 @@ def generate_sudoku(clues=25):
     return board
 
 def solve_backtracking(board):
+    """
+    Solve the Sudoku puzzle using backtracking.
+    Returns True if the puzzle is solvable.
+    """
     empty = find_empty_cell(board)
     if not empty:
         return True
@@ -56,6 +77,9 @@ def solve_backtracking(board):
 
 #Console Display
 def print_board(board, highlight=None):
+    """
+    Print the Sudoku board to the console with optional highlighting.
+    """
     for i in range(9):
         row_str = ""
         for j in range(9):
@@ -73,6 +97,10 @@ def print_board(board, highlight=None):
     print("\n")
 
 def visual_solve_console(board, delay=0.05):
+    """
+    Solve the board with step-by-step output to the console.
+    Includes optional delay to slow down visualization.
+    """
     empty = find_empty_cell(board)
     if not empty:
         return True
@@ -91,6 +119,10 @@ def visual_solve_console(board, delay=0.05):
     return False
 
 def run_console_version(clues):
+    """
+    Run the console-based version of the Sudoku solver.
+    Prompts the user to begin solving.
+    """
     clues = choose_difficulty()
     board = generate_sudoku(clues=clues)
     print("\nInitial Board (Difficulty: {} clues):\n".format(clues))
@@ -121,6 +153,10 @@ pygame.display.set_caption("Sudoku Solver Visualizer")
 font = pygame.font.SysFont("arial", 35)
 
 def draw_board(board, highlight=None):
+    """
+    Draw the Sudoku board on the Pygame window.
+    Highlights the current cell if specified.
+    """
     win.fill((255, 255, 255))
     for i in range(10):
         line_width = 4 if i % 3 == 0 else 1
@@ -140,6 +176,9 @@ def draw_board(board, highlight=None):
     pygame.display.update()
 
 def visual_solve_pygame(board):
+    """
+    Solve the Sudoku puzzle with visual updates using Pygame.
+    """
     empty = find_empty_cell(board)
     if not empty:
         return True
@@ -161,6 +200,10 @@ def visual_solve_pygame(board):
     return False
 
 def run_pygame_version(clues):
+    """
+    Run the graphical version of the Sudoku solver using Pygame.
+    Press SPACE to start solving the puzzle.
+    """
     board = generate_sudoku(clues=clues)
     running = True
     solving = False
@@ -178,6 +221,10 @@ def run_pygame_version(clues):
     pygame.quit()
 
 def choose_difficulty():
+    """
+    Prompt the user to select a difficulty level.
+    Returns the number of clues corresponding to the difficulty.
+    """
     print("Select Difficulty:")
     print("1 - Easy")
     print("2 - Medium")
@@ -196,7 +243,6 @@ def choose_difficulty():
 
 if __name__ == "__main__":
     import argparse
-
     parser = argparse.ArgumentParser(description='Sudoku Solver')
     parser.add_argument('mode', choices=['console', 'visual'], help='Display mode')
     parser.add_argument('difficulty', type=int, nargs='?', default=30, 
