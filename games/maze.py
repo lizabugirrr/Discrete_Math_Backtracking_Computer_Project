@@ -88,12 +88,12 @@ def solve_maze(screen, maze, r, c, end_r, end_c, clock, path_length=0):
 
 
 # constants for console
-GREEN = '\033[92m'
-RED = '\033[91m'
-BLUE = '\033[94m'
-GRAY = '\033[90m'
-RESET = '\033[0m'
-YELLOW = '\033[93m'
+С_GREEN = '\033[92m'
+С_RED = '\033[91m'
+С_BLUE = '\033[94m'
+С_GRAY = '\033[90m'
+С_RESET = '\033[0m'
+С_YELLOW = '\033[93m'
 
 # save maze display for console version
 # to avoid re-creating it every time
@@ -106,15 +106,15 @@ def print_maze(maze_to_print):
     for row in maze_to_print:
         for cell in row:
             if cell == '#':
-                print(YELLOW + '# ' + RESET, end='')
+                print(С_YELLOW + '# ' + С_RESET, end='')
             elif cell == 'A':
-                print(GREEN + 'A ' + RESET, end='')
+                print(С_GREEN + 'A ' + С_RESET, end='')
             elif cell == 'B':
-                print(RED + 'B ' + RESET, end='')
+                print(С_RED + 'B ' + С_RESET, end='')
             elif cell == '*':
-                print(BLUE + '* ' + RESET, end='')
+                print(С_BLUE + '* ' + С_RESET, end='')
             elif cell == '.':
-                print(GRAY + '. ' + RESET, end='')
+                print(С_GRAY + '. ' + С_RESET, end='')
             else:
                 print(cell + ' ', end='')
         print()
