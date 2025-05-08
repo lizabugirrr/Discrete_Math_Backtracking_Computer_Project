@@ -18,6 +18,9 @@ GRAY = (200, 200, 200)
 YELLOW = (255, 255, 0)
 
 class CrosswordSolverBase:
+    """
+    base class for crossword solver
+    """
     def __init__(self, grid, words, screen, valid_words, use_console_visualization=False):
         self.grid = [row[:] for row in grid] #deep copy
         self.rows = len(grid)
@@ -33,6 +36,9 @@ class CrosswordSolverBase:
             self.font = pygame.font.Font(None, 30)
     # function for visualisation
     def draw_cell(self, row, col, value, highlight=False):
+        """
+        Draw a cell in the crossword grid.
+        """
         if self.screen is None:
             return
 
@@ -49,12 +55,18 @@ class CrosswordSolverBase:
             self.screen.blit(text, (col * CELL_SIZE + 10, row * CELL_SIZE + 5))
     # function for visualisation
     def clear_console(self):
+        """
+        Clear the console screen
+        """
         if os.name == 'nt':
             os.system('cls')
         else:
             os.system('clear')
     # function for visualisation
     def print_board(self, highlight_positions=None):
+        """
+        Print the crossword grid to the console or screen.
+        """
         if self.use_console_visualization:
             self.clear_console()
             print("\nПоточний стан кросворду:")
@@ -99,6 +111,9 @@ class CrosswordSolverBase:
         pygame.display.update()
 
     def is_valid_placement(self, word, row, col, direction):
+        """ 
+        Check if the word can be placed in the grid at the given position and direction
+        """
         if direction == 'H':
             if col + len(word) > self.cols:
                 return False
@@ -117,6 +132,8 @@ class CrosswordSolverBase:
         return True
 
     def check_intersections(self, new_word, row, col, direction):
+        """
+        Check if the new word intersects with existing words in the grid"""
         #create a temporary grid to check intersections
         temp_grid = [row[:] for row in self.grid]
         if direction == 'H':
@@ -169,6 +186,8 @@ class CrosswordSolverBase:
         return True
 
     def place_word(self, word, row, col, direction):
+        """
+        Place the word in the grid at the given position and direction"""
         previous_state = []
         positions = []
 
@@ -194,6 +213,9 @@ class CrosswordSolverBase:
         return previous_state
 
     def remove_word(self, word, row, col, direction, previous_state):
+        """
+        Remove the word from the grid at the given position and direction
+        """
         if direction == 'H':
             for i in range(len(word)):
                 self.grid[row][col + i] = previous_state[i]
@@ -210,6 +232,9 @@ class CrosswordSolverBase:
                 break
     # function for visualisation
     def highlight_intersections(self):
+        """
+        Highlight the intersections of the words in the grid.
+        """
         intersections = []
         for i, word1 in enumerate(self.word_positions):
             for j, word2 in enumerate(self.word_positions):
@@ -223,7 +248,12 @@ class CrosswordSolverBase:
         return intersections
 
 class BacktrackingSolver(CrosswordSolverBase):
+    """
+    Backtracking solver for the crossword puzzle.
+    """
     def solve(self, index=0):
+        """ 
+        Solve the crossword puzzle using backtracking."""
         if index == len(self.words):
         #     if any('-' in sublist for sublist in self.grid):
         #         return False
@@ -283,6 +313,9 @@ class BacktrackingSolver(CrosswordSolverBase):
         return False
 # function for visualisation
 def benchmark_solver(solver_class, grid, words, name, valid_words, use_console=False):
+    """
+    Benchmark the crossword solver with the given grid and words.
+    """
     screen = None
     if not use_console:
         try:
@@ -350,6 +383,8 @@ grid = [
 #     ['-','-','-','-','-','-','-']
 # ]
 def load_words_from_file(filename):
+    """
+    Load words from a file and return them as a list."""
     if not os.path.exists(filename):
         print(f"Файл {filename} не знайдено.")
         return []
@@ -359,6 +394,9 @@ def load_words_from_file(filename):
     return words
 
 def run_console_version():
+    """
+    Run the console version of the crossword solver.
+    """
     words_file = 'words_2.txt'
     all_words = load_words_from_file(words_file)
 
@@ -381,6 +419,9 @@ def run_console_version():
     benchmark_solver(BacktrackingSolver, grid, selected_words, "Backtracking", valid_words_set, use_console=True)
 
 def run_pygame_version():
+    """
+    Run the Pygame version of the crossword solver.
+    """
     try:
         # words_file = 'words_2.txt'
         words_file = os.path.join(os.path.dirname(__file__), 'words_2.txt')
