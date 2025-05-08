@@ -1,7 +1,5 @@
-pet
-try
+sun
 cat
-balance
-ucu
+dog
 ukraine
 aunt
