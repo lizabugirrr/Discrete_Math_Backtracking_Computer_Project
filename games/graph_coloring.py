@@ -2,6 +2,7 @@ import argparse
 import matplotlib.pyplot as plt
 import networkx as nx
 import sys
+import pygame
 from colorama import init, Fore, Back, Style
 
 init(autoreset=True)

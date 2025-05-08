@@ -422,11 +422,6 @@ def run_visual_version():
     root.bind("<Configure>", on_resize)
     root.mainloop()
 
-def run_pygame_version():
-    """
-    Runs the Pygame version of the application.
-    """
-    pass
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='N-Queens Solver')
@@ -438,4 +433,4 @@ if __name__ == "__main__":
     elif args.mode == 'visual':
         run_visual_version()
     else:
-        run_pygame_version()
+        run_visual_version()
