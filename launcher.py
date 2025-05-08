@@ -103,26 +103,34 @@ class GameLauncher:
         else:
             self.run_game_script(game_info["script"], mode="visual")
 
+ 
     def show_difficulty_dialog(self, game_name: str, game_info: Dict):
         dialog = tk.Toplevel(self.root)
         dialog.title(f"Select Difficulty for {game_name}")
-        dialog.geometry("300x200")
+        dialog.configure(bg="white")
         dialog.resizable(False, False)
         self.center_window(dialog)
 
-        diff_frame = ttk.Frame(dialog)
+        btn_height = 60
+        total_height = 120 + len(game_info["difficulty_options"]) * btn_height
+        dialog.geometry(f"350x{total_height}")
+
+        diff_frame = ttk.Frame(dialog, style='TFrame')
         diff_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
 
-        ttk.Label(diff_frame, text="Select Difficulty:").pack(pady=(10, 20))
+        label = ttk.Label(diff_frame, text="Select Difficulty:", style='Title.TLabel')
+        label.pack(pady=(10, 20))
 
         for diff_name, diff_value in game_info["difficulty_options"]:
             btn = ttk.Button(
                 diff_frame,
                 text=diff_name,
+                style='Game.TButton',
                 command=lambda dv=diff_value: self.on_difficulty_selected(
                     game_info["script"], dv, dialog)
             )
-            btn.pack(fill=tk.X, pady=5)
+            btn.pack(fill=tk.X, expand=True, pady=8)
+
 
     def on_difficulty_selected(self, script: str, difficulty: int, dialog: tk.Toplevel):
         dialog.destroy()
