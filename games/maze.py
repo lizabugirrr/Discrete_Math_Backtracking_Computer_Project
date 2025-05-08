@@ -32,6 +32,9 @@ maze = [
 ]
 
 def draw_cell(screen, r, c, symbol):
+    """
+    Draws a cell in the maze based on its symbol.
+    """
     color = WHITE
     if symbol == '#':
         color = BLACK
@@ -49,6 +52,9 @@ def draw_cell(screen, r, c, symbol):
 best_path_length = float('inf')
 
 def solve_maze(screen, maze, r, c, end_r, end_c, clock, path_length=0):
+    """
+    Solves the maze using backtracking and visualizes the process using Pygame.
+    """
     global best_path_length
 
     if path_length >= best_path_length:
@@ -100,9 +106,15 @@ def solve_maze(screen, maze, r, c, end_r, end_c, clock, path_length=0):
 maze_display = None
 
 def clear_screen():
+    """
+    Clears the console screen.
+    """
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def print_maze(maze_to_print):
+    """
+    Prints the maze to the console with colors for different symbols.
+    """
     for row in maze_to_print:
         for cell in row:
             if cell == '#':
@@ -119,6 +131,8 @@ def print_maze(maze_to_print):
                 print(cell + ' ', end='')
         print()
 def solve_maze_console(maze, r, c, end_r, end_c, path_length=0):
+    """
+    Solves the maze using backtracking and visualizes the process in the console."""
     global best_path_length, maze_display
 
     if path_length >= best_path_length:
@@ -161,6 +175,9 @@ def solve_maze_console(maze, r, c, end_r, end_c, path_length=0):
     return False
 
 def run_console_version():
+    """
+    Runs the console version of the maze solver.
+    """
     global maze_display
 
     maze_display = [row[:] for row in maze]
@@ -197,6 +214,9 @@ def run_console_version():
 
 
 def run_pygame_version():
+    """
+    Runs the Pygame version of the maze solver.
+    """
     pygame.init()
     rows, cols = len(maze), len(maze[0])
     screen = pygame.display.set_mode((cols * CELL_SIZE, rows * CELL_SIZE))
